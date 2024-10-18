@@ -3,22 +3,17 @@ from groq import Groq
 import base64
 import streamlit as st
 from tavily import TavilyClient
-import pyttsx3
-
+import os
 
 client = Groq(
-    api_key="coloque sua chave aqui",
+    api_key=os.getenv("GROQ_API"),
 )
 
 llava_model = 'llava-v1.5-7b-4096-preview'
 llama31_model = 'llama-3.1-70b-versatile'
 
 #Instantiating your TavilyClient
-tavily_client = TavilyClient(api_key="coloque sua chave aqui")
-
-
-# Inicializar o mecanismo de síntese de voz
-tts_engine = pyttsx3.init()
+tavily_client = TavilyClient(api_key=os.getenv("TAVILY_API"))
 
 
 # 2. Image encoding
@@ -57,8 +52,7 @@ def search_internet(query):
 
 # 4. Short story generation function
 def analyzer_generation(client, content, food):
-    chat_completion = client.chat.completions.create(
-                                  
+    chat_completion = client.chat.completions.create(                                  
         
         messages=[
             {
@@ -108,9 +102,7 @@ def main():
         st.write("\n--- Análise do Alimento ---")
         food_description = analyzer_generation(client, content, image_description)
         st.write(food_description)
-        tts_engine.say(food_description)
-        tts_engine.runAndWait()
-
+      
        
 
 if __name__ == "__main__":
